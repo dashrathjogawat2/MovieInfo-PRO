@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieInfo Pro - Professional Movie Details Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #f8f9fa;
+            --accent: #34a853;
+            --text: #333333;
+            --text-light: #5f6368;
+            --border: #dadce0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header and Header Ad */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Header Ad - 728x90 */
+        .header-ad {
+            width: 100%;
+            height: 90px;
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .content-area {
+            flex: 1;
+        }
+
+        /* Sidebar Ad - 300x600 (Desktop) */
+        .sidebar-ad-desktop {
+            width: 300px;
+            height: 600px;
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+            position: sticky;
+            top: 140px;
+        }
+
+        /* Search Section */
+        .search-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .search-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-title i {
+            color: var(--accent);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 3px 15px rgba(26, 115, 232, 0.2);
+        }
+
+        .search-btn {
+            background: linear-gradient(to right, var(--primary), #4285f4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 115, 232, 0.4);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .examples {
+            font-size: 14px;
+            color: var(--text-light);
+            padding-left: 10px;
+        }
+
+        .examples span {
+            background-color: #e8f0fe;
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        /* Results Section */
+        .results-section {
+            min-height: 300px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Movie Card */
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            margin-bottom: 30px;
+        }
+
+        .movie-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .movie-header {
+            display: flex;
+            padding: 25px;
+            background: linear-gradient(to right, #f8f9fa, #ffffff);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .movie-poster {
+            width: 200px;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-basic-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .movie-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .imdb-rating {
+            display: flex;
+            align-items: center;
+            background-color: #f5c518;
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .imdb-rating i {
+            margin-right: 5px;
+        }
+
+        .movie-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .movie-plot {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .imdb-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+        }
+
+        .imdb-link:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 115, 232, 0.4);
+        }
+
+        .movie-details {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .detail-title {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-content {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* In-Content Ad */
+        .in-content-ad {
+            width: 100%;
+            height: 250px;
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Sidebar Ad - Mobile */
+        .sidebar-ad-mobile {
+            display: none;
+            width: 100%;
+            height: 250px;
+            background-color: #f0f0f0;
+            border: 2px dashed #ccc;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Error Message */
+        .error-message {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message h3 {
+            color: #d32f2f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #202124;
+            color: #e8eaed;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .api-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .copyright {
+            font-size: 14px;
+            color: #9aa0a6;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar-ad-desktop {
+                display: none;
+            }
+            
+            .sidebar-ad-mobile {
+                display: flex;
+            }
+            
+            .movie-header {
+                flex-direction: column;
+            }
+            
+            .movie-poster {
+                align-self: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-ad {
+                height: 70px;
+                font-size: 14px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                padding: 15px;
+                width: 100%;
+            }
+            
+            .movie-title {
+                font-size: 24px;
+            }
+            
+            .movie-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .in-content-ad {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-ad {
+                height: 60px;
+                font-size: 12px;
+            }
+            
+            .logo h1 {
+                font-size: 18px;
+            }
+            
+            .search-title {
+                font-size: 18px;
+            }
+            
+            .movie-basic-info {
+                min-width: 100%;
+            }
+            
+            .movie-poster {
+                width: 180px;
+                height: 270px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad Here -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-ad">
+                    <!-- Header Ad Here - 728x90 Leaderboard -->
+                    <div>Advertisement - 728x90 Leaderboard Ad Space</div>
+                </div>
+                <div class="logo">
+                    <i class="fas fa-film"></i>
+                    <h1>MovieInfo Pro</h1>
+                </div>
+                <p class="tagline">Professional Movie Details & Reviews</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="content-area">
+                <!-- Search Section -->
+                <section class="search-section">
+                    <h2 class="search-title"><i class="fas fa-search"></i> Search Movie Details</h2>
+                    <div class="search-container">
+                        <input type="text" class="search-box" id="movieInput" placeholder="Enter movie name (e.g., The Dark Knight, Inception, Avatar)">
+                        <button class="search-btn" id="searchBtn">Search Movie</button>
+                    </div>
+                    <p class="examples">
+                        Try: 
+                        <span>Avengers: Endgame</span>
+                        <span>Dune</span>
+                        <span>The Shawshank Redemption</span>
+                        <span>Parasite</span>
+                    </p>
+                </section>
+
+                <!-- Sidebar Ad Mobile -->
+                <div class="sidebar-ad-mobile">
+                    <!-- Sidebar Ad Here - 300x600 (Mobile) -->
+                    <div>Advertisement - 300x600 Vertical Ad (Mobile)</div>
+                </div>
+
+                <!-- Loading Animation -->
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Fetching movie details from OMDb API...</p>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Movie Not Found</h3>
+                    <p id="errorText">We couldn't find the movie you're looking for. Please check the spelling and try again.</p>
+                </div>
+
+                <!-- Results Section -->
+                <section class="results-section">
+                    <div class="movie-card" id="movieCard">
+                        <!-- Movie details will be populated here by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- In-Content Ad -->
+                <div class="in-content-ad">
+                    <!-- In-Content Ad Here -->
+                    <div>Advertisement - Responsive In-Content Ad Space</div>
+                </div>
+            </div>
+
+            <!-- Sidebar Ad Desktop -->
+            <div class="sidebar-ad-desktop">
+                <!-- Sidebar Ad Here - 300x600 (Desktop) -->
+                <div>Advertisement - 300x600 Vertical Ad (Desktop)</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3>MovieInfo Pro</h3>
+                <p>Professional tool for movie information, ratings, and reviews</p>
+                
+                <div class="api-info">
+                    <p><strong>API Information:</strong> This tool uses the OMDb API to fetch movie data.</p>
+                    <p>To use this tool, you need to get your own API key from <a href="https://www.omdbapi.com/apikey.aspx" style="color: #8ab4f8;">OMDb API</a> and replace the placeholder in the code.</p>
+                </div>
+                
+                <div class="copyright">
+                    <p>© 2023 MovieInfo Pro. This product uses the OMDb API but is not endorsed or certified by OMDb.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===============================
+        // IMPORTANT: API KEY SETUP
+        // ===============================
+        // Get your API key from https://www.omdbapi.com/apikey.aspx
+        // Replace "dd7f9341" with your actual OMDb API key
+        const API_KEY = "dd7f9341";
+        // ===============================
+
+        // DOM Elements
+        const movieInput = document.getElementById('movieInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const movieCard = document.getElementById('movieCard');
+
+        // Example movies for quick search
+        const exampleMovies = [
+            "The Dark Knight",
+            "Inception",
+            "Parasite",
+            "The Shawshank Redemption",
+            "Avengers: Endgame",
+            "Pulp Fiction",
+            "The Godfather",
+            "Interstellar"
+        ];
+
+        // Set a random example as placeholder
+        window.addEventListener('DOMContentLoaded', () => {
+            const randomMovie = exampleMovies[Math.floor(Math.random() * exampleMovies.length)];
+            movieInput.placeholder = `Enter movie name (e.g., ${randomMovie})`;
+            
+            // Try to load a default movie on page load
+            fetchMovieData("Inception");
+        });
+
+        // Event Listeners
+        searchBtn.addEventListener('click', () => {
+            const movieName = movieInput.value.trim();
+            if (movieName) {
+                fetchMovieData(movieName);
+            }
+        });
+
+        movieInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const movieName = movieInput.value.trim();
+                if (movieName) {
+                    fetchMovieData(movieName);
+                }
+            }
+        });
+
+        // Function to fetch movie data from OMDb API
+        async function fetchMovieData(movieName) {
+            // Show loading animation
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            movieCard.classList.remove('show');
+            movieCard.innerHTML = '';
+
+            try {
+                // यहाँ API_KEY use हो रहा है
+                const response = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${API_KEY}&plot=full`);
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hide loading animation
+                loading.style.display = 'none';
+                
+                // Check if movie was found
+                if (data.Response === "False") {
+                    showError(data.Error || "Movie not found");
+                    return;
+                }
+                
+                // Display movie data
+                displayMovieData(data);
+            } catch (error) {
+                loading.style.display = 'none';
+                showError(`Error fetching data: ${error.message}`);
+                console.error('Error fetching movie data:', error);
+            }
+        }
+
+        // Function to display movie data
+        function displayMovieData(movie) {
+            // Format runtime
+            const runtime = movie.Runtime !== "N/A" ? movie.Runtime : "Not available";
+            
+            // Format genre
+            const genre = movie.Genre !== "N/A" ? movie.Genre.split(",").map(g => `<span style="background-color:#e8f0fe; color:var(--primary); padding:3px 10px; border-radius:20px; margin-right:5px; display:inline-block; margin-bottom:5px;">${g.trim()}</span>`).join("") : "Not available";
+            
+            // Format director
+            const director = movie.Director !== "N/A" ? movie.Director : "Not available";
+            
+            // Format cast
+            const cast = movie.Actors !== "N/A" ? movie.Actors : "Not available";
+            
+            // Format IMDb rating
+            const imdbRating = movie.imdbRating !== "N/A" ? movie.imdbRating : "N/A";
+            
+            // Format plot
+            const plot = movie.Plot !== "N/A" ? movie.Plot : "No plot summary available.";
+            
+            // Create movie card HTML
+            movieCard.innerHTML = `
+                <div class="movie-header">
+                    <div class="movie-poster">
+                        <img src="${movie.Poster !== "N/A" ? movie.Poster : 'https://via.placeholder.com/200x300/cccccc/666666?text=No+Poster'}" alt="${movie.Title} Poster">
+                    </div>
+                    <div class="movie-basic-info">
+                        <div class="movie-title">
+                            ${movie.Title} (${movie.Year})
+                            <div class="imdb-rating">
+                                <i class="fas fa-star"></i> ${imdbRating}/10
+                            </div>
+                        </div>
+                        
+                        <div class="movie-meta">
+                            <div class="meta-item">
+                                <i class="far fa-calendar-alt"></i> ${movie.Year}
+                            </div>
+                            <div class="meta-item">
+                                <i class="far fa-clock"></i> ${runtime}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-film"></i> ${movie.Rated}
+                            </div>
+                        </div>
+                        
+                        <p class="movie-plot">${plot}</p>
+                        
+                        <a href="https://www.imdb.com/title/${movie.imdbID}" target="_blank" class="imdb-link">
+                            <i class="fab fa-imdb"></i> View on IMDb
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="movie-details">
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-video"></i> Genre
+                        </div>
+                        <div class="detail-content">${genre}</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-user-tie"></i> Director
+                        </div>
+                        <div class="detail-content">${director}</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-users"></i> Cast
+                        </div>
+                        <div class="detail-content">${cast}</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-language"></i> Language
+                        </div>
+                        <div class="detail-content">${movie.Language !== "N/A" ? movie.Language : "Not available"}</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-award"></i> Awards
+                        </div>
+                        <div class="detail-content">${movie.Awards !== "N/A" ? movie.Awards : "No awards information"}</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-title">
+                            <i class="fas fa-box-office"></i> Box Office
+                        </div>
+                        <div class="detail-content">${movie.BoxOffice !== "N/A" ? movie.BoxOffice : "Not available"}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Show card with animation
+            setTimeout(() => {
+                movieCard.classList.add('show');
+            }, 100);
+        }
+
+        // Function to show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Add event listeners to example spans
+        document.querySelectorAll('.examples span').forEach(span => {
+            span.addEventListener('click', () => {
+                movieInput.value = span.textContent;
+                fetchMovieData(span.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
